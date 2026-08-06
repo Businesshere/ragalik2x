@@ -11,9 +11,9 @@ npm run build && npm start
 
 ## Pages
 
-| Route            | What it is                                                   |
-| ---------------- | ------------------------------------------------------------ |
-| `/`              | Hero recreated 1:1 from the reference screenshot              |
+| Route            | What it is                                                        |
+| ---------------- | ----------------------------------------------------------------- |
+| `/`              | Hero (recreated 1:1 from the reference), benefits, demo booking, industry carousel, footer |
 | `/video-editing` | Simple service page — copy lives in arrays at the top of the file |
 
 ## How the desktop layout matches the reference
@@ -45,11 +45,18 @@ app/
   components/
     Stage.tsx             the 1672px design canvas
     Header.tsx            logo, nav, header buttons
-    Hero.tsx              headline, sub-copy, photo, backdrop, cards
+    Hero.tsx              headline, sub-copy, photo, backdrop
+    ReviewCardsLayer.tsx  the six review cards; they drift with the pointer
     ReviewCard.tsx        one floating review card (sm / md / lg variants)
+    GrowFaster.tsx        "More Reviews. More Revenue." expand/collapse cards
+    BookDemo.tsx          three-stage demo booking flow
+    IndustryCarousel.tsx  infinite marquee of business categories
+    Footer.tsx            menus, trust strip, social links
     TextUsWidget.tsx      chat widget — opens a message form on click
+    ReviewPopup.tsx       recent-review notification, bottom-left
     icons.tsx             Google, G2, star, sparkle and chat marks (inline SVG)
-  data/reviews.ts         card content and desktop placement
+  data/reviews.ts         hero card content and desktop placement
+  data/industries.ts      carousel categories
 public/images/            hero photo and avatars extracted from the reference
 ```
 
@@ -62,5 +69,10 @@ Styling is CSS Modules; the type family is Urbanist via `next/font/google`.
   files in `public/images/` to use real assets.
 - The review copy reproduces the reference verbatim, including its typos
   (`d:dominate`, `now:come`).
-- The Text-us button opens a working message panel (client-side only — wire the
-  submit handler in `TextUsWidget.tsx` to your backend or SMS provider).
+- The Text-us button opens a working message panel and the demo booking flow
+  runs end to end, but both are client-side only — wire the submit handlers in
+  `TextUsWidget.tsx` and `BookDemo.tsx` to your backend, SMS provider and
+  calendar.
+- Placeholder content to replace before launch: the notification names in
+  `ReviewPopup.tsx`, the award badges and rating figure in `Footer.tsx`, and the
+  gradient tiles standing in for photos in the carousel and benefit cards.
