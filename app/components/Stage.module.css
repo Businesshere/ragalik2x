@@ -1,0 +1,19 @@
+.stage {
+  position: relative;
+  width: calc(1672 * var(--u));
+  margin: 0 auto;
+}
+
+.fullHeight {
+  min-height: var(--hero-h);
+}
+
+@media (max-width: 1099px) {
+  .stage {
+    width: 100%;
+  }
+
+  .fullHeight {
+    min-height: 0;
+  }
+}

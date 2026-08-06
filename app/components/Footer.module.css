@@ -1,0 +1,285 @@
+/*
+ * Dark footer: brand + menus, then the trust strip (awards and ratings),
+ * then the legal line and social links.
+ */
+.footer {
+  background: #08090f;
+  color: #d7dae6;
+}
+
+.inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  /* the chat widget and review popup float over the bottom corners,
+     so the last row keeps clear of them */
+  padding: clamp(44px, 5vw, 76px) clamp(16px, 4vw, 40px)
+    clamp(96px, 9vw, 128px);
+  text-align: center;
+}
+
+/* --------------------------------- top ----------------------------------- */
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr);
+  gap: clamp(28px, 4vw, 64px);
+  padding-bottom: clamp(30px, 3.4vw, 52px);
+  text-align: left;
+}
+
+.logo {
+  font-size: clamp(28px, 2.4vw, 38px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: #a95cff;
+}
+
+.pitch {
+  max-width: 34ch;
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #9aa0b5;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  margin-top: 20px;
+  padding: 0 22px;
+  border-radius: 9px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: background-color 0.2s ease;
+}
+
+.cta:hover {
+  background: #2a63ff;
+}
+
+.menus {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.4vw, 40px);
+}
+
+.menuTitle {
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+}
+
+.menu li + li {
+  margin-top: 9px;
+}
+
+.menuLink {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #9aa0b5;
+  transition: color 0.15s ease;
+}
+
+.menuLink:hover {
+  color: #fff;
+}
+
+/* -------------------------------- trust ---------------------------------- */
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 2.4vw, 40px);
+  padding: clamp(22px, 2.4vw, 34px) 0;
+  border-top: 1px solid #1e2130;
+  border-bottom: 1px solid #1e2130;
+}
+
+.awards {
+  display: flex;
+  gap: 10px;
+}
+
+/* A ribbon badge: white card with a coloured notch under it. */
+.award {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 66px;
+  padding: 7px 6px 16px;
+  border-radius: 3px;
+  background: #fff;
+  text-align: center;
+}
+
+.season {
+  font-size: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7183;
+}
+
+.awardLabel {
+  margin-top: 6px;
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #14141c;
+}
+
+.ribbon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -9px;
+  height: 18px;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 50% 100%, 0 45%);
+}
+
+.ratings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(18px, 2.4vw, 40px);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: clamp(18px, 2.4vw, 40px);
+  border-left: 1px solid #1e2130;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #cfd3e0;
+}
+
+.rating span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.stars {
+  gap: 2px;
+  color: #fff;
+}
+
+.stars svg {
+  width: 14px;
+  height: 14px;
+}
+
+.platform {
+  width: 19px;
+  height: 19px;
+}
+
+/* -------------------------------- bottom --------------------------------- */
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: clamp(22px, 2.2vw, 32px);
+}
+
+.copy {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #7b8195;
+}
+
+.legal {
+  display: flex;
+  gap: 20px;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.legal a {
+  color: #7b8195;
+  transition: color 0.15s ease;
+}
+
+.legal a:hover {
+  color: #fff;
+}
+
+.social {
+  display: flex;
+  gap: 8px;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #9aa0b5;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.socialLink:hover {
+  background: #171a26;
+  color: #fff;
+}
+
+.socialLink svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ------------------------------- Responsive ------------------------------ */
+@media (max-width: 900px) {
+  .top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .menus {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .rating {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .trust {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .awards {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .ratings {
+    width: 100%;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .bottom {
+    justify-content: center;
+    text-align: center;
+  }
+}

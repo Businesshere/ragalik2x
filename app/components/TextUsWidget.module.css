@@ -1,0 +1,276 @@
+/* Chat widget — fixed to the viewport, so it rides along as the page scrolls. */
+.widget {
+  position: fixed;
+  right: calc(57 * var(--u));
+  bottom: calc(34 * var(--u));
+  width: calc(224 * var(--u));
+  height: calc(101 * var(--u));
+  z-index: 50;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: calc(5 * var(--u));
+  width: calc(224 * var(--u));
+  height: calc(64 * var(--u));
+  padding: 0 calc(12 * var(--u)) calc(26 * var(--u));
+  border: calc(1.2 * var(--u)) solid #fff;
+  border-radius: calc(32 * var(--u));
+  background: var(--dark);
+  color: #fff;
+  font-size: calc(15 * var(--u));
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: calc(-0.012 * 15 * var(--u));
+  white-space: nowrap;
+  /* tucked behind the pill at rest, peeking just enough to hint at it */
+  transform: translateY(calc(30 * var(--u)));
+  transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.widget:hover .badge,
+.widget:focus-within .badge {
+  transform: translateY(0);
+}
+
+/* Touch devices have no hover, so the badge simply stays out. */
+@media (hover: none) {
+  .badge {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none;
+  }
+}
+
+.badgeStar {
+  width: calc(15 * var(--u));
+  height: calc(15 * var(--u));
+  flex: none;
+}
+
+.pill {
+  position: absolute;
+  top: calc(37 * var(--u));
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: calc(207 * var(--u));
+  height: calc(64 * var(--u));
+  padding-left: calc(37 * var(--u));
+  border-radius: calc(32 * var(--u));
+  background: #fff;
+  box-shadow: 0 calc(10 * var(--u)) calc(24 * var(--u))
+    rgba(35, 35, 70, 0.16);
+}
+
+.label {
+  font-size: calc(19 * var(--u));
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: calc(0.25 * 19 * var(--u));
+  color: #0d0d0d;
+}
+
+.circle {
+  position: absolute;
+  right: calc(-16 * var(--u));
+  top: 50%;
+  transform: translateY(calc(-50% + 1.5 * var(--u)));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(63.5 * var(--u));
+  height: calc(63.5 * var(--u));
+  border: calc(2.5 * var(--u)) solid #fff;
+  border-radius: 50%;
+  background: var(--dark);
+  color: #fff;
+}
+
+.chat {
+  width: calc(33 * var(--u));
+  height: calc(33 * var(--u));
+}
+
+.pill:hover .circle,
+.pill:focus-visible .circle {
+  background: #262626;
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+/* -------------------- message panel (opens on click) --------------------- */
+.panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px);
+  width: min(320px, calc(100vw - 32px));
+  padding: 16px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(20, 20, 45, 0.24);
+  text-align: left;
+  animation: rise 0.16s ease-out;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.panelTitle {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dark);
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin: -4px -4px -4px 0;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  color: #6b7280;
+}
+
+.close:hover {
+  background: #f1f2f7;
+  color: var(--dark);
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.labelText {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid #dfe2ef;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--dark);
+  background: #fbfbfe;
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: #fff;
+}
+
+.send {
+  margin-top: 2px;
+  padding: 11px;
+  border-radius: 10px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.send:hover {
+  background: #0b3ad6;
+}
+
+.sent {
+  padding: 8px 0 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+/* ---------------------------- Tablet / mobile ---------------------------- */
+@media (max-width: 1099px) {
+  .widget {
+    right: 16px;
+    bottom: 18px;
+    width: 196px;
+    height: auto;
+  }
+
+  .badge {
+    width: 196px;
+    height: 56px;
+    padding: 0 12px 23px;
+    border-radius: 28px;
+    font-size: 12px;
+    gap: 5px;
+    letter-spacing: 0.015em;
+  }
+
+  .badgeStar {
+    width: 12px;
+    height: 12px;
+  }
+
+  .pill {
+    top: 32px;
+    width: 182px;
+    height: 56px;
+    padding-left: 32px;
+    border-radius: 28px;
+  }
+
+  .label {
+    font-size: 16px;
+    letter-spacing: 0.17em;
+  }
+
+  .circle {
+    right: -14px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .chat {
+    width: 26px;
+    height: 26px;
+  }
+}

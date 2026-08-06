@@ -1,0 +1,222 @@
+/*
+ * The desktop hero is a 1672 x 941 canvas: every element is placed with the
+ * coordinates measured from the design, expressed in design pixels (`--u`).
+ */
+.hero {
+  position: absolute;
+  inset: 0;
+}
+
+/* ------------------------------- backdrop -------------------------------- */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* the glow and rings are clipped by the hero's bottom edge — fading them
+     out first keeps that edge from reading as a line */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 86%,
+    rgba(0, 0, 0, 0.35) 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 86%,
+    rgba(0, 0, 0, 0.35) 95%,
+    transparent 100%
+  );
+}
+
+/* Two soft violet pools sit behind the model, brighter on her left. */
+.glow {
+  position: absolute;
+  left: calc(var(--gx) * var(--u));
+  bottom: calc(var(--gy) * var(--u));
+  width: calc(var(--gw) * var(--u));
+  height: calc(var(--gh) * var(--u));
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(178, 102, 255, var(--ga)) 0%,
+    rgba(178, 102, 255, 0) 100%
+  );
+}
+
+.ring {
+  position: absolute;
+  left: calc(836 * var(--u));
+  bottom: calc(111 * var(--u));
+  width: calc(var(--r) * 2 * var(--u));
+  height: calc(var(--r) * 2 * var(--u));
+  transform: translate(-50%, 50%);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+}
+
+.sparkle {
+  position: absolute;
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--size) * var(--u));
+  height: calc(var(--size) * var(--u));
+  transform: translate(-50%, -50%);
+  color: #c9a2fd;
+}
+
+/* --------------------------------- copy ---------------------------------- */
+.copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(117 * var(--u));
+  z-index: 2;
+  text-align: center;
+}
+
+/*
+ * In the reference the headline and the sub-copy sit a few pixels right of
+ * the canvas centre; the padding reproduces that optical offset.
+ */
+
+.title {
+  padding-left: calc(21 * var(--u));
+  font-size: calc(67 * var(--u));
+  line-height: calc(75 * var(--u));
+  font-weight: 700;
+  letter-spacing: calc(-0.039 * 67 * var(--u));
+  color: var(--ink);
+}
+
+.subtitle {
+  max-width: calc(610 * var(--u));
+  margin: calc(19.5 * var(--u)) auto 0;
+  padding-left: calc(6 * var(--u));
+  font-size: calc(25.4 * var(--u));
+  line-height: calc(32 * var(--u));
+  font-weight: 500;
+  letter-spacing: calc(-0.004 * 25 * var(--u));
+  color: var(--ink-soft);
+}
+
+/* -------------------------------- figure --------------------------------- */
+.figure {
+  position: absolute;
+  left: calc(567 * var(--u));
+  bottom: 0;
+  width: calc(589 * var(--u));
+  z-index: 1;
+  /* the photo is cropped at the fold — fade it out so it meets the next
+     section instead of ending on a hard edge */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 82%,
+    rgba(0, 0, 0, 0.55) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 82%,
+    rgba(0, 0, 0, 0.55) 93%,
+    transparent 100%
+  );
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+}
+
+/* --------------------------------- cards --------------------------------- */
+.cards {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* ---------------------------- Tablet / mobile ---------------------------- */
+@media (max-width: 1099px) {
+  .hero {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(36px, 6vw, 72px) clamp(16px, 4vw, 40px) 120px;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .glow {
+    left: 50%;
+    bottom: auto;
+    top: clamp(200px, 40vw, 420px);
+    width: min(120vw, 860px);
+    height: min(80vw, 560px);
+    transform: translateX(-50%);
+  }
+
+  .glow:last-of-type {
+    display: none;
+  }
+
+  .ring,
+  .sparkle {
+    display: none;
+  }
+
+  .copy {
+    position: static;
+    width: 100%;
+    max-width: 680px;
+    z-index: 2;
+  }
+
+  .title {
+    padding-left: 0;
+    font-size: clamp(30px, 6.2vw, 62px);
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+  }
+
+  .subtitle {
+    max-width: 40ch;
+    padding-left: 0;
+    margin-top: clamp(12px, 1.8vw, 22px);
+    font-size: clamp(16px, 2.2vw, 23px);
+    line-height: 1.32;
+    letter-spacing: -0.004em;
+  }
+
+  .figure {
+    position: static;
+    width: min(86vw, 440px);
+    margin-top: clamp(20px, 3vw, 36px);
+    z-index: 1;
+  }
+
+  .cards {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    justify-items: center;
+    gap: clamp(26px, 4vw, 40px);
+    width: 100%;
+    max-width: 760px;
+    margin-top: clamp(36px, 6vw, 64px);
+    z-index: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 360px;
+  }
+}

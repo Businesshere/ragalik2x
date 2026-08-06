@@ -1,0 +1,197 @@
+.header {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(71 * var(--u));
+  padding: calc(23 * var(--u)) calc(91 * var(--u)) 0 calc(80 * var(--u));
+}
+
+.logo {
+  font-size: calc(58 * var(--u));
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: calc(-0.025 * 58 * var(--u));
+  color: var(--purple);
+  transform: translateY(calc(2 * var(--u)));
+}
+
+/* The nav is optically centred on the page, independent of the side items. */
+.nav {
+  position: absolute;
+  left: 50%;
+  top: calc(23 * var(--u));
+  height: calc(48 * var(--u));
+  transform: translateX(calc(-50% - 10 * var(--u)));
+  display: flex;
+  align-items: center;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: calc(56 * var(--u));
+}
+
+.navLink {
+  font-size: calc(17.5 * var(--u));
+  font-weight: 700;
+  letter-spacing: calc(-0.01 * 17.5 * var(--u));
+  color: var(--ink);
+  transition: opacity 0.2s ease;
+}
+
+.navLink:hover {
+  opacity: 0.6;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: calc(16 * var(--u));
+}
+
+.ghostButton,
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(48 * var(--u));
+  font-size: calc(15 * var(--u));
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: calc(0.02 * 15 * var(--u));
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ghostButton {
+  width: calc(174 * var(--u));
+  border: calc(1.6 * var(--u)) solid var(--purple);
+  border-radius: calc(12 * var(--u));
+  color: var(--purple);
+}
+
+.ghostButton:hover {
+  background: rgba(133, 0, 252, 0.08);
+}
+
+.primaryButton {
+  width: calc(140 * var(--u));
+  border-radius: calc(10 * var(--u));
+  background: var(--blue);
+  color: #fff;
+}
+
+.primaryButton:hover {
+  background: #0b3ad6;
+}
+
+/* --------------------------------- Tablet -------------------------------- */
+/* Logo, nav and buttons stay on one row, just tighter. */
+@media (max-width: 1099px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 12px clamp(14px, 2.5vw, 32px);
+    height: auto;
+    padding: 18px clamp(16px, 4vw, 40px) 0;
+  }
+
+  .logo {
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.025em;
+    transform: none;
+  }
+
+  .nav {
+    position: static;
+    width: auto;
+    height: auto;
+    transform: none;
+  }
+
+  .navList {
+    gap: clamp(18px, 3vw, 40px);
+  }
+
+  .navLink {
+    font-size: clamp(14px, 1.6vw, 16px);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .actions {
+    gap: 8px;
+  }
+
+  .ghostButton,
+  .primaryButton {
+    width: auto;
+    height: 40px;
+    padding: 0 clamp(12px, 1.6vw, 18px);
+    font-size: clamp(11px, 1.4vw, 13px);
+    letter-spacing: 0.02em;
+    border-radius: 10px;
+  }
+
+  .ghostButton {
+    border-width: 1.5px;
+  }
+}
+
+/* --------------------------------- Mobile -------------------------------- */
+/* Two rows: logo + nav, then the two buttons split full width. */
+@media (max-width: 619px) {
+  .header {
+    row-gap: 14px;
+    padding-top: 16px;
+  }
+
+  .logo {
+    font-size: clamp(24px, 7vw, 32px);
+  }
+
+  .nav {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .navList {
+    gap: clamp(14px, 4.5vw, 26px);
+  }
+
+  .navLink {
+    font-size: clamp(13px, 3.6vw, 15px);
+  }
+
+  .actions {
+    order: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .ghostButton,
+  .primaryButton {
+    width: 100%;
+    height: 44px;
+    padding: 0 8px;
+    font-size: clamp(11px, 3vw, 13px);
+  }
+}
+
+@media (max-width: 360px) {
+  .navList {
+    gap: 12px;
+  }
+
+  .ghostButton,
+  .primaryButton {
+    height: 40px;
+    font-size: 10.5px;
+    letter-spacing: 0.01em;
+  }
+}

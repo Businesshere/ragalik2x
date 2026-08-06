@@ -1,0 +1,123 @@
+/*
+ * Recent-review notification, fixed to the bottom-left of the viewport.
+ * It slides in, holds, slides out and comes back with the next review.
+ */
+.popup {
+  position: fixed;
+  left: 26px;
+  bottom: 26px;
+  z-index: 45;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  padding: 16px 20px 15px 16px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(18, 20, 50, 0.16),
+    0 2px 6px rgba(18, 20, 50, 0.06);
+  opacity: 0;
+  transform: translateY(14px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.badge {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  margin-top: 2px;
+  color: #ffc61a;
+}
+
+.body {
+  min-width: 0;
+}
+
+.headline {
+  font-size: 15px;
+  line-height: 1.32;
+  font-weight: 500;
+  color: #1f2024;
+}
+
+.name {
+  font-weight: 700;
+  color: #1a73e8;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 1px;
+  color: #ffc61a;
+}
+
+.stars svg {
+  width: 14px;
+  height: 14px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9aa0ab;
+}
+
+.check {
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  color: #9aa0ab;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
+
+  .visible {
+    transform: none;
+  }
+}
+
+/* On phones it sits above the chat widget rather than beside it. */
+@media (max-width: 720px) {
+  .popup {
+    left: 14px;
+    bottom: 112px;
+    width: min(310px, calc(100vw - 28px));
+    padding: 13px 16px 12px 13px;
+    gap: 11px;
+  }
+
+  .badge {
+    width: 36px;
+    height: 36px;
+  }
+
+  .headline {
+    font-size: 14px;
+  }
+}

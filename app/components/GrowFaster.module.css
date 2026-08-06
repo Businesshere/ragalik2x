@@ -1,0 +1,391 @@
+/*
+ * "Grow faster" — three benefit cards, the middle one wider and carrying a
+ * floating activity panel.
+ */
+.section {
+  padding: clamp(52px, 6vw, 96px) clamp(16px, 4vw, 40px) clamp(40px, 4vw, 72px);
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: clamp(11px, 0.8vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #2f56d6;
+}
+
+.title {
+  margin-top: clamp(14px, 1.4vw, 22px);
+  font-size: clamp(28px, 2.7vw, 44px);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: #14141c;
+}
+
+.lede {
+  max-width: 62ch;
+  margin: clamp(12px, 1.2vw, 20px) auto 0;
+  font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.45;
+  font-weight: 500;
+  color: #55555f;
+}
+
+.grid {
+  display: flex;
+  gap: clamp(10px, 0.9vw, 14px);
+  max-width: 1180px;
+  height: clamp(330px, 31vw, 420px);
+  margin: clamp(28px, 3vw, 48px) auto 0;
+  text-align: left;
+}
+
+/* One card is open at a time — opening it grows it and shrinks the others. */
+.card {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border-radius: clamp(12px, 1vw, 16px);
+  overflow: hidden;
+  background: linear-gradient(155deg, var(--from), var(--to));
+  isolation: isolate;
+  cursor: pointer;
+  text-align: left;
+  transition: flex-grow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card[data-open="true"] {
+  flex-grow: 2.65;
+  cursor: default;
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark wash so the caption stays readable over any photo. */
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: clamp(14px, 1.4vw, 22px) clamp(14px, 1.3vw, 20px)
+    clamp(16px, 1.6vw, 24px);
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 14, 0.82) 0%,
+    rgba(10, 10, 14, 0.66) 55%,
+    rgba(10, 10, 14, 0) 100%
+  );
+  color: #fff;
+}
+
+.caption {
+  display: block;
+  transition: max-width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card[data-open="true"] .caption {
+  max-width: min(45%, 260px);
+  border-radius: 0 clamp(12px, 1vw, 16px) 0 0;
+}
+
+.cardTitle {
+  display: block;
+  font-size: clamp(19px, 1.6vw, 26px);
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.cardText {
+  display: block;
+  margin-top: clamp(8px, 0.8vw, 14px);
+  font-size: clamp(12.5px, 0.9vw, 14.5px);
+  line-height: 1.42;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ------------------------- floating activity panel ------------------------ */
+.panel {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease 0s, visibility 0s linear 0.3s;
+  position: absolute;
+  right: clamp(12px, 1.6vw, 22px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(300px, 46%);
+  padding: clamp(12px, 1.1vw, 18px);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(15, 18, 40, 0.2);
+  color: #14141c;
+  z-index: 1;
+}
+
+.card[data-open="true"] .panel {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.35s ease 0.15s, visibility 0s;
+}
+
+.panelTitle {
+  display: block;
+  font-size: clamp(13px, 1vw, 16px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: clamp(8px, 0.9vw, 14px);
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eceef5;
+  font-size: clamp(10px, 0.72vw, 12px);
+  font-weight: 500;
+  color: #6f7183;
+}
+
+.rows {
+  display: block;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: clamp(5px, 0.55vw, 9px) 0;
+  border-bottom: 1px solid #f2f3f8;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.rowName {
+  flex: 1;
+  font-size: clamp(10px, 0.74vw, 12.5px);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+}
+
+.dotOn,
+.dotOff {
+  width: clamp(7px, 0.6vw, 10px);
+  height: clamp(7px, 0.6vw, 10px);
+  border-radius: 50%;
+}
+
+.dotOn {
+  background: #7ed0b8;
+}
+
+.dotOff {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #d9e6e2;
+}
+
+.score {
+  margin-left: 5px;
+  font-size: clamp(10px, 0.74vw, 12.5px);
+  font-weight: 700;
+}
+
+/* --- local results --- */
+.rank {
+  flex: none;
+  width: 14px;
+  font-size: clamp(10px, 0.72vw, 12px);
+  font-weight: 700;
+  color: #a3a7b8;
+}
+
+.row[data-you="true"] .rank {
+  color: var(--blue);
+}
+
+.row[data-you="true"] .rowName {
+  font-weight: 700;
+}
+
+.ratingCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  font-size: clamp(10px, 0.74vw, 12.5px);
+  font-weight: 700;
+}
+
+.ratingStar {
+  width: clamp(9px, 0.7vw, 12px);
+  height: clamp(9px, 0.7vw, 12px);
+  color: var(--star);
+}
+
+.count {
+  font-weight: 500;
+  color: #a3a7b8;
+}
+
+/* --- review requests --- */
+.reviewed {
+  display: inline-flex;
+  gap: 1px;
+  flex: none;
+  color: var(--star);
+}
+
+.reviewed svg {
+  width: clamp(8px, 0.62vw, 11px);
+  height: clamp(8px, 0.62vw, 11px);
+}
+
+.status {
+  flex: none;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: clamp(9px, 0.64vw, 11px);
+  font-weight: 700;
+  background: #eef0f7;
+  color: #7c8296;
+}
+
+.status[data-status="opened"] {
+  background: #e8f1fe;
+  color: #2f6fe4;
+}
+
+/* --- rating breakdown --- */
+.average {
+  font-weight: 700;
+  color: #14141c;
+}
+
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: clamp(4px, 0.45vw, 7px) 0;
+}
+
+.barLabel {
+  flex: none;
+  width: 20px;
+  font-size: clamp(9px, 0.68vw, 11.5px);
+  font-weight: 700;
+  color: #6f7183;
+}
+
+.barTrack {
+  flex: 1;
+  height: clamp(5px, 0.45vw, 8px);
+  border-radius: 999px;
+  background: #eef0f7;
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #7ed0b8;
+}
+
+.barValue {
+  flex: none;
+  width: 30px;
+  text-align: right;
+  font-size: clamp(9px, 0.68vw, 11.5px);
+  font-weight: 700;
+}
+
+/* -------------------------------- Responsive ------------------------------ */
+@media (max-width: 1099px) {
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: auto;
+  }
+
+  /* stacked cards are all open at once, so nothing expands or collapses */
+  .card,
+  .card[data-open="true"] {
+    height: clamp(280px, 40vw, 380px);
+    cursor: default;
+  }
+
+  .card:nth-child(2) {
+    grid-column: span 2;
+  }
+
+  .card[data-open="true"] .caption,
+  .caption {
+    max-width: min(52%, 300px);
+  }
+
+  .card:not(:nth-child(2)) .caption {
+    max-width: none;
+  }
+
+  .panel,
+  .card[data-open="true"] .panel {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card:nth-child(2) {
+    grid-column: auto;
+  }
+
+  .card,
+  .card[data-open="true"] {
+    height: clamp(260px, 62vw, 340px);
+  }
+
+  /* the panel needs room the phone card does not have */
+  .panel,
+  .card[data-open="true"] .panel {
+    display: none;
+  }
+
+  .caption,
+  .card[data-open="true"] .caption {
+    max-width: none;
+    border-radius: 0;
+  }
+}

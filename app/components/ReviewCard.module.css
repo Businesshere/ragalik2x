@@ -1,0 +1,226 @@
+/*
+ * Floating review card.
+ * Desktop metrics are expressed in design pixels (`--u`); the three size
+ * variants mirror the three card sizes used in the reference layout.
+ */
+.card {
+  --card-w: 197;
+  --pad-x: 11.5;
+  --pad-top: 11.5;
+  --pad-bottom: 12;
+  --logo: 37.5;
+  --head-h: var(--logo);
+  --star-size: 15.5;
+  --star-inset: 2;
+  --quote: 16.7;
+  --quote-lh: 20.5;
+  --head-gap: 9.5;
+  --foot-gap: 16.5;
+  --avatar: 32;
+  --avatar-gap: 9;
+  --meta: 8.65;
+  --meta-lh: 11;
+  /* how far this card drifts with the pointer, in design px */
+  --depth: 12;
+
+  position: absolute;
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--width, var(--card-w)) * var(--u));
+  padding: calc(var(--pad-top) * var(--u)) calc(var(--pad-x) * var(--u))
+    calc(var(--pad-bottom) * var(--u));
+  transform: translate(
+      calc(-50% + var(--mx, 0) * var(--depth) * var(--u)),
+      calc(-50% + var(--my, 0) * var(--depth) * var(--u))
+    )
+    rotate(var(--rotate)) scale(var(--scale, 1));
+  transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  border-radius: calc(18 * var(--u));
+  background: var(--card);
+  box-shadow: var(--card-shadow);
+}
+
+.md {
+  --card-w: 197;
+}
+
+.lg {
+  --card-w: 216;
+  --pad-x: 12;
+  --pad-top: 12;
+  --pad-bottom: 10;
+  --logo: 35;
+  --head-h: 33;
+  --star-size: 16.4;
+  --star-inset: 1;
+  --quote: 16.3;
+  --quote-lh: 22.5;
+  --head-gap: 18.8;
+  --foot-gap: 8.7;
+  --avatar: 34;
+  --avatar-gap: 10;
+  --meta: 10.5;
+  --meta-lh: 12.5;
+}
+
+.sm {
+  --card-w: 192;
+  --pad-x: 11;
+  --pad-top: 10.5;
+  --pad-bottom: 14;
+  --logo: 33;
+  --star-size: 14.6;
+  --star-inset: 2;
+  --quote: 14;
+  --quote-lh: 16.7;
+  --head-gap: 5.9;
+  --foot-gap: 12.6;
+  --avatar: 29;
+  --avatar-gap: 8;
+  --meta: 8.2;
+  --meta-lh: 10;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(8 * var(--u));
+  height: calc(var(--head-h) * var(--u));
+}
+
+.logo {
+  width: calc(var(--logo) * var(--u));
+  height: calc(var(--logo) * var(--u));
+  flex: none;
+}
+
+.stars {
+  display: inline-flex;
+  gap: calc(1.2 * var(--u));
+  margin-right: calc(var(--star-inset) * var(--u));
+  color: var(--star);
+}
+
+.stars svg {
+  width: calc(var(--star-size) * var(--u));
+  height: calc(var(--star-size) * var(--u));
+}
+
+.quote {
+  margin-top: calc(var(--head-gap) * var(--u));
+  font-size: calc(var(--quote) * var(--u));
+  line-height: calc(var(--quote-lh) * var(--u));
+  font-weight: 500;
+  letter-spacing: calc(-0.015 * var(--quote) * var(--u));
+  color: var(--ink);
+}
+
+.italic .quote {
+  font-style: italic;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--avatar-gap) * var(--u));
+  margin-top: calc(var(--foot-gap) * var(--u));
+}
+
+.avatar {
+  width: calc(var(--avatar) * var(--u));
+  height: calc(var(--avatar) * var(--u));
+  border-radius: 50%;
+  flex: none;
+  object-fit: cover;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: calc(var(--meta) * var(--u));
+  line-height: calc(var(--meta-lh) * var(--u));
+  font-weight: 700;
+  letter-spacing: calc(-0.01 * var(--meta) * var(--u));
+  color: var(--card-name);
+}
+
+.date {
+  font-size: calc(var(--meta) * var(--u));
+  line-height: calc(var(--meta-lh) * var(--u));
+  font-weight: 500;
+  color: var(--card-date);
+}
+
+/* ---------- Tablet / mobile: cards flow in a grid under the hero ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
+
+@media (max-width: 1099px) {
+  .card {
+    position: static;
+    width: 100%;
+    max-width: 330px;
+    padding: 20px 20px 18px;
+    /* the full design tilt would push rotated cards past the viewport edge */
+    transform: rotate(calc(var(--rotate) * 0.4));
+    border-radius: 20px;
+    box-shadow: 0 14px 34px rgba(60, 62, 110, 0.12),
+      0 2px 6px rgba(60, 62, 110, 0.06);
+  }
+
+  .head {
+    height: auto;
+  }
+
+  .logo,
+  .lg .logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .stars {
+    gap: 2px;
+    margin-right: 0;
+  }
+
+  .stars svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .quote {
+    margin-top: 16px;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -0.24px;
+  }
+
+  .author {
+    margin-top: 20px;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .name {
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: -0.13px;
+  }
+
+  .date {
+    font-size: 12.5px;
+    line-height: 16px;
+  }
+}

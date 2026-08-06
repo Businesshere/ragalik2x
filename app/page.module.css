@@ -1,0 +1,5 @@
+.page {
+  /* Every section sits on the same light-violet surface as the hero, so the
+     parts flow into one another with nothing to transition between. */
+  overflow: hidden;
+}
