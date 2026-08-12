@@ -76,7 +76,7 @@ export default function Hero() {
         <Image
           className={styles.photo}
           src="/images/hero-woman-phone.png"
-          alt="Woman holding a phone showing BeFirst's 5-star Google reviews"
+          alt="Woman holding a phone showing BeVisible's 5-star Google reviews"
           width={589}
           height={664}
           sizes="(max-width: 1099px) 90vw, 36vw"

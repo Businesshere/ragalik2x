@@ -78,7 +78,7 @@ export default function Footer() {
         <div className={styles.top}>
           <div className={styles.brand}>
             <Link className={styles.logo} href="/">
-              BeFirst
+              BeVisible
             </Link>
             <p className={styles.pitch}>
               More 5-star Google reviews, collected on autopilot — so local
@@ -140,7 +140,7 @@ export default function Footer() {
 
         <div className={styles.bottom}>
           <p className={styles.copy}>
-            © {new Date().getFullYear()} BeFirst. All rights reserved.
+            © {new Date().getFullYear()} BeVisible. All rights reserved.
           </p>
 
           <ul className={styles.legal}>

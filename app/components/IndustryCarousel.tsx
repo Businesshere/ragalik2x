@@ -39,7 +39,7 @@ export default function IndustryCarousel() {
       <h2 className={styles.title} id="industries-title">
         We&apos;ve helped local service businesses
         <br />
-        for over 125 years
+        for over 5 years
       </h2>
 
       <div className={styles.viewport}>

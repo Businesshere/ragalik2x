@@ -55,12 +55,28 @@
   isolation: isolate;
   cursor: pointer;
   text-align: left;
-  transition: flex-grow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(15, 18, 40, 0.16),
+    0 10px 26px rgba(15, 18, 40, 0.12);
+  transition: flex-grow 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 0.45s ease, transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .card[data-open="true"] {
   flex-grow: 2.65;
   cursor: default;
+  box-shadow: 0 2px 4px rgba(15, 18, 40, 0.18),
+    0 22px 48px rgba(15, 18, 40, 0.2);
+}
+
+/* Hairline edge keeps light photos from bleeding into the page background. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  pointer-events: none;
 }
 
 .card:focus-visible {
@@ -74,33 +90,55 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Closed cards sit back a step so the open one carries the section. */
+  transform: scale(1.06);
+  filter: saturate(0.82) brightness(0.88);
+  transition: transform 0.7s cubic-bezier(0.32, 0.72, 0, 1),
+    filter 0.5s ease;
 }
 
-/* Dark wash so the caption stays readable over any photo. */
+.card[data-open="true"] .photo {
+  transform: scale(1);
+  filter: none;
+}
+
+.card[data-open="false"]:hover .photo {
+  transform: scale(1.02);
+  filter: saturate(0.95) brightness(0.98);
+}
+
+/*
+ * Dark wash so the caption stays readable over any photo. It spans the whole
+ * card at every state — the extra stops keep the long fade from banding.
+ */
 .caption {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: clamp(14px, 1.4vw, 22px) clamp(14px, 1.3vw, 20px)
+  z-index: 1;
+  padding: clamp(20px, 2.4vw, 40px) clamp(14px, 1.3vw, 20px)
     clamp(16px, 1.6vw, 24px);
   background: linear-gradient(
     to top,
-    rgba(10, 10, 14, 0.82) 0%,
-    rgba(10, 10, 14, 0.66) 55%,
+    rgba(10, 10, 14, 0.88) 0%,
+    rgba(10, 10, 14, 0.78) 26%,
+    rgba(10, 10, 14, 0.6) 48%,
+    rgba(10, 10, 14, 0.36) 68%,
+    rgba(10, 10, 14, 0.14) 85%,
     rgba(10, 10, 14, 0) 100%
   );
   color: #fff;
 }
 
-.caption {
+/* Only the text column narrows, so it never runs under the panel. */
+.captionInner {
   display: block;
-  transition: max-width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: max-width 0.55s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.card[data-open="true"] .caption {
+.card[data-open="true"] .captionInner {
   max-width: min(45%, 260px);
-  border-radius: 0 clamp(12px, 1vw, 16px) 0 0;
 }
 
 .cardTitle {
@@ -109,6 +147,15 @@
   line-height: 1.12;
   font-weight: 700;
   letter-spacing: -0.03em;
+}
+
+/* The open card is wide enough for the title to sit on a single line. */
+.card[data-open="true"] .titleBreak {
+  display: none;
+}
+
+.card[data-open="true"] .cardTitle {
+  white-space: nowrap;
 }
 
 .cardText {
@@ -125,24 +172,29 @@
   display: block;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease 0s, visibility 0s linear 0.3s;
+  transition: opacity 0.3s ease 0s, transform 0.3s ease 0s,
+    visibility 0s linear 0.3s;
   position: absolute;
   right: clamp(12px, 1.6vw, 22px);
   top: 50%;
-  transform: translateY(-50%);
+  /* Slides in from the right edge as the card opens. */
+  transform: translate(14px, -50%) scale(0.97);
   width: min(300px, 46%);
   padding: clamp(12px, 1.1vw, 18px);
-  border-radius: 10px;
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 18px 44px rgba(15, 18, 40, 0.2);
+  box-shadow: 0 2px 6px rgba(15, 18, 40, 0.1),
+    0 20px 50px rgba(15, 18, 40, 0.24);
   color: #14141c;
-  z-index: 1;
+  z-index: 3;
 }
 
 .card[data-open="true"] .panel {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.35s ease 0.15s, visibility 0s;
+  transform: translate(0, -50%) scale(1);
+  transition: opacity 0.4s ease 0.18s,
+    transform 0.55s cubic-bezier(0.32, 0.72, 0, 1) 0.18s, visibility 0s;
 }
 
 .panelTitle {
@@ -347,12 +399,28 @@
     grid-column: span 2;
   }
 
-  .card[data-open="true"] .caption,
-  .caption {
+  /* stacked cards never dim, since none of them is "the closed one" */
+  .photo,
+  .card[data-open="true"] .photo {
+    transform: none;
+    filter: none;
+  }
+
+  /* every stacked card is wide enough for a one-line title */
+  .titleBreak {
+    display: none;
+  }
+
+  .cardTitle {
+    white-space: nowrap;
+  }
+
+  .card[data-open="true"] .captionInner,
+  .captionInner {
     max-width: min(52%, 300px);
   }
 
-  .card:not(:nth-child(2)) .caption {
+  .card:not(:nth-child(2)) .captionInner {
     max-width: none;
   }
 
@@ -360,6 +428,7 @@
   .card[data-open="true"] .panel {
     opacity: 1;
     visibility: visible;
+    transform: translate(0, -50%) scale(1);
   }
 }
 
@@ -383,9 +452,19 @@
     display: none;
   }
 
-  .caption,
-  .card[data-open="true"] .caption {
+  .captionInner,
+  .card[data-open="true"] .captionInner {
     max-width: none;
-    border-radius: 0;
+  }
+}
+
+/* Motion is decoration here — the open/closed states still read without it. */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .photo,
+  .captionInner,
+  .panel,
+  .card[data-open="true"] .panel {
+    transition-duration: 0.01ms;
   }
 }

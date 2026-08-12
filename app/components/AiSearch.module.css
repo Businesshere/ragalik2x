@@ -1,0 +1,782 @@
+/*
+ * "Your customers ask AI first" — a scripted assistant answer on the left and
+ * an incoming Google review on the right. Every element animates on mount, so
+ * the sequence replays simply by remounting its pieces (see AiSearch.tsx).
+ */
+.section {
+  position: relative;
+  padding: clamp(52px, 6vw, 96px) clamp(16px, 4vw, 40px) clamp(40px, 4vw, 72px);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Soft violet pool tying the section back to the hero backdrop. */
+.section::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: clamp(90px, 11vw, 190px);
+  width: min(1180px, 130vw);
+  height: min(600px, 66vw);
+  transform: translateX(-50%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(133, 0, 252, 0.13) 0%,
+    rgba(133, 0, 252, 0) 70%
+  );
+  pointer-events: none;
+}
+
+.eyebrow {
+  position: relative;
+  font-size: clamp(11px, 0.8vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--purple);
+}
+
+.title {
+  position: relative;
+  margin-top: clamp(14px, 1.4vw, 22px);
+  font-size: clamp(28px, 2.7vw, 44px);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: #14141c;
+}
+
+.lede {
+  position: relative;
+  max-width: 60ch;
+  margin: clamp(12px, 1.2vw, 20px) auto 0;
+  font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.45;
+  font-weight: 500;
+  color: #55555f;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
+ * The demo and the closing statement share one grid cell, so the second can
+ * resolve out of the first without the section changing height.
+ */
+.frame {
+  position: relative;
+  display: grid;
+  max-width: 1080px;
+  margin: clamp(30px, 3.4vw, 54px) auto 0;
+  text-align: left;
+}
+
+.frame > * {
+  grid-area: 1 / 1;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.34fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(16px, 2.2vw, 36px);
+  transition: opacity 0.9s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.9s cubic-bezier(0.32, 0.72, 0, 1),
+    filter 0.9s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Frosts and lifts away rather than simply fading. */
+.stage[data-out="true"] {
+  opacity: 0;
+  transform: scale(0.965) translateY(-10px);
+  filter: blur(16px) saturate(1.35);
+  pointer-events: none;
+}
+
+/* --------------------------------- chat ---------------------------------- */
+.chat {
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(360px, 34vw, 430px);
+  border-radius: clamp(16px, 1.3vw, 22px);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 20, 45, 0.07),
+    0 20px 54px rgba(38, 32, 84, 0.14);
+  overflow: hidden;
+}
+
+.chatBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(11px, 1vw, 15px) clamp(14px, 1.3vw, 20px);
+  border-bottom: 1px solid #eef0f7;
+}
+
+.chrome {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.chrome i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #e3e6f0;
+}
+
+.chatTitle {
+  font-size: clamp(11px, 0.8vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #8a90a6;
+}
+
+.thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.2vw, 18px);
+  padding: clamp(16px, 1.6vw, 24px) clamp(14px, 1.4vw, 22px);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The question, once it leaves the composer. */
+.ask {
+  align-self: flex-end;
+  max-width: 82%;
+  padding: clamp(9px, 0.85vw, 13px) clamp(12px, 1.1vw, 17px);
+  border-radius: 16px 16px 5px 16px;
+  background: #f0f2fa;
+  font-size: clamp(13px, 0.98vw, 15.5px);
+  line-height: 1.55;
+  font-weight: 600;
+  color: #1c2033;
+  animation: rise 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/*
+ * The parts an answer engine matches on. Each one is wiped in left-to-right
+ * by growing its background, staggered by position so the phrase reads as it
+ * lights up. `--i` is the segment index, so the plain words in between leave
+ * a natural beat.
+ */
+@keyframes light {
+  from {
+    background-size: 0% 100%;
+    color: #1c2033;
+  }
+  to {
+    background-size: 100% 100%;
+    color: #4416a6;
+  }
+}
+
+.keyword {
+  padding: 2px 4px;
+  margin: 0 -4px;
+  border-radius: 5px;
+  color: #1c2033;
+  background-color: transparent;
+  background-image: linear-gradient(
+    100deg,
+    rgba(133, 0, 252, 0.2),
+    rgba(2, 71, 254, 0.16)
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  animation: light 0.44s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation-delay: calc(220ms + var(--i) * 130ms);
+}
+
+.answer {
+  display: flex;
+  gap: clamp(9px, 0.85vw, 13px);
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: clamp(26px, 2.1vw, 32px);
+  height: clamp(26px, 2.1vw, 32px);
+  border-radius: 50%;
+  background: linear-gradient(150deg, var(--purple), var(--blue));
+  color: #fff;
+  animation: rise 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.mark svg {
+  width: 54%;
+  height: 54%;
+}
+
+/* --- thinking --- */
+.thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: clamp(26px, 2.1vw, 32px);
+}
+
+.thinking i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c3c8db;
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+.thinking i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.thinking i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes pulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* --- answer --- */
+.reply {
+  min-width: 0;
+}
+
+.replyLead {
+  font-size: clamp(13px, 0.98vw, 15.5px);
+  line-height: 1.4;
+  font-weight: 600;
+  color: #1c2033;
+  animation: rise 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(7px, 0.7vw, 11px);
+  margin-top: clamp(10px, 1vw, 15px);
+}
+
+.result {
+  display: flex;
+  gap: clamp(8px, 0.8vw, 12px);
+  padding: clamp(9px, 0.85vw, 13px) clamp(10px, 0.95vw, 14px);
+  border: 1px solid #edeff6;
+  border-radius: 12px;
+  background: #fbfcff;
+  /* staggered by position, so the list resolves top-down */
+  animation: rise 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation-delay: calc(160ms + var(--i) * 150ms);
+}
+
+.rank {
+  flex: none;
+  width: clamp(18px, 1.5vw, 22px);
+  height: clamp(18px, 1.5vw, 22px);
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: #eceffa;
+  font-size: clamp(10px, 0.74vw, 12px);
+  font-weight: 700;
+  color: #6a7192;
+}
+
+.resultBody {
+  display: block;
+  min-width: 0;
+}
+
+.resultHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.resultName {
+  font-size: clamp(12.5px, 0.94vw, 15px);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: #14141c;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 3px;
+  font-size: clamp(10.5px, 0.76vw, 12.5px);
+  font-weight: 600;
+  color: #6a7192;
+}
+
+.scoreStar {
+  width: clamp(10px, 0.74vw, 12px);
+  height: clamp(10px, 0.74vw, 12px);
+  color: var(--star);
+}
+
+.count {
+  font-weight: 500;
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #c3c8db;
+}
+
+.note {
+  display: block;
+  margin-top: 5px;
+  font-size: clamp(10.5px, 0.78vw, 12.5px);
+  line-height: 1.4;
+  font-weight: 500;
+  color: #7a8098;
+}
+
+/* --- composer --- */
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 clamp(14px, 1.4vw, 22px) clamp(14px, 1.4vw, 22px);
+  padding: clamp(9px, 0.85vw, 13px) clamp(9px, 0.85vw, 13px)
+    clamp(9px, 0.85vw, 13px) clamp(13px, 1.15vw, 18px);
+  border: 1px solid #e7eaf4;
+  border-radius: 999px;
+  background: #fafbff;
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+  font-size: clamp(12.5px, 0.94vw, 15px);
+  font-weight: 500;
+  color: #1c2033;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.placeholder {
+  color: #a8aec4;
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 1px;
+  vertical-align: -0.18em;
+  background: var(--purple);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.send {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: clamp(28px, 2.2vw, 34px);
+  height: clamp(28px, 2.2vw, 34px);
+  border-radius: 50%;
+  background: #e7eaf4;
+  color: #a8aec4;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.send[data-armed="true"] {
+  background: linear-gradient(150deg, var(--purple), var(--blue));
+  color: #fff;
+}
+
+.send svg {
+  width: 62%;
+  height: 62%;
+}
+
+/* ------------------------------ review card ------------------------------ */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1vw, 16px);
+  /* reserved so the column does not collapse before the cards arrive */
+  min-height: clamp(250px, 24vw, 300px);
+}
+
+/* `--tilt` and `--slide` are re-pointed per breakpoint, so one keyframe set
+   covers the rotated desktop card and the flat stacked one. */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(var(--slide)) rotate(0deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(var(--tilt));
+  }
+}
+
+.reviewCard {
+  --tilt: -1.4deg;
+  --slide: 18px, 0;
+
+  padding: clamp(13px, 1.25vw, 19px);
+  border-radius: clamp(14px, 1.2vw, 20px);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 20, 45, 0.07),
+    0 18px 46px rgba(38, 32, 84, 0.15);
+  transform: rotate(var(--tilt));
+  animation: slideIn 0.6s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation-delay: calc(var(--i) * 260ms);
+}
+
+/* The second card counter-tilts, so the pair reads as a loose stack. */
+.reviewCard:nth-child(2) {
+  --tilt: 1.1deg;
+}
+
+.reviewTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  flex: none;
+  width: clamp(34px, 2.7vw, 44px);
+  height: clamp(34px, 2.7vw, 44px);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.who {
+  flex: 1;
+  min-width: 0;
+}
+
+.author {
+  display: block;
+  font-size: clamp(12.5px, 0.94vw, 15px);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: var(--card-name);
+}
+
+.when {
+  display: block;
+  margin-top: 1px;
+  font-size: clamp(10px, 0.72vw, 12px);
+  font-weight: 500;
+  color: var(--card-date);
+}
+
+.google {
+  flex: none;
+  width: clamp(15px, 1.15vw, 19px);
+  height: clamp(15px, 1.15vw, 19px);
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  margin-top: clamp(9px, 0.9vw, 14px);
+  color: var(--star);
+}
+
+.stars svg {
+  width: clamp(12px, 0.92vw, 15px);
+  height: clamp(12px, 0.92vw, 15px);
+}
+
+.quote {
+  margin-top: clamp(7px, 0.7vw, 11px);
+  font-size: clamp(12.5px, 0.92vw, 14.5px);
+  line-height: 1.65;
+  font-weight: 500;
+  color: #2b3043;
+}
+
+/*
+ * Phrases an answer engine can actually use, in the customer's own words and
+ * echoed back in the reply. Green reads as "this one counts in your favour".
+ * `--i` is inherited from the card, `--k` is the mark's order inside it, so
+ * the highlights land after their card has settled.
+ */
+@keyframes goodLight {
+  from {
+    background-size: 0% 100%;
+    color: inherit;
+  }
+  to {
+    background-size: 100% 100%;
+    color: #0d7038;
+  }
+}
+
+.good {
+  padding: 2px 4px;
+  margin: 0 -2px;
+  border-radius: 5px;
+  color: inherit;
+  background-color: transparent;
+  background-image: linear-gradient(
+    100deg,
+    rgba(16, 163, 74, 0.2),
+    rgba(16, 163, 74, 0.13)
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  font-weight: 600;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  animation: goodLight 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation-delay: calc(var(--i, 0) * 260ms + 900ms + var(--k, 0) * 160ms);
+}
+
+.replyBox {
+  margin-top: clamp(11px, 1.1vw, 16px);
+  padding-left: clamp(9px, 0.85vw, 13px);
+  border-left: 2px solid rgba(133, 0, 252, 0.35);
+  /* lands a beat after the card itself */
+  animation: rise 0.45s cubic-bezier(0.32, 0.72, 0, 1) 0.45s both;
+}
+
+.replyTag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: clamp(9.5px, 0.68vw, 11.5px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+.replyTag svg {
+  width: 10px;
+  height: 10px;
+}
+
+.replyText {
+  margin-top: 5px;
+  font-size: clamp(11.5px, 0.86vw, 13.5px);
+  line-height: 1.62;
+  font-weight: 500;
+  color: #6a7192;
+}
+
+/* ------------------------------- statement ------------------------------- */
+@keyframes statementIn {
+  from {
+    opacity: 0;
+    transform: scale(1.07);
+    filter: blur(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes statementOut {
+  to {
+    opacity: 0;
+    transform: scale(0.975);
+    filter: blur(15px);
+  }
+}
+
+/* A frosted pane resolving out of the blur the demo left behind. */
+.statement {
+  align-self: center;
+  justify-self: center;
+  max-width: min(100%, 820px);
+  padding: clamp(28px, 3.2vw, 56px) clamp(22px, 3vw, 60px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: clamp(20px, 1.8vw, 32px);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(24px) saturate(1.7);
+  backdrop-filter: blur(24px) saturate(1.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 8px rgba(20, 20, 45, 0.05), 0 34px 76px rgba(38, 32, 84, 0.17);
+  text-align: center;
+  animation: statementIn 0.95s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.statement[data-out="true"] {
+  animation: statementOut 0.8s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.statementLine {
+  font-size: clamp(27px, 3.9vw, 62px);
+  line-height: 1.06;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  color: #14141c;
+  white-space: nowrap;
+}
+
+/* The rotating word sits in a slot cut to the longest of the set. */
+.rotator {
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.rotatorSizer {
+  visibility: hidden;
+}
+
+.rotatorWord {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  background: linear-gradient(100deg, var(--purple), var(--blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.rotatorCaret {
+  display: inline-block;
+  width: 0.055em;
+  height: 0.86em;
+  margin-left: 0.04em;
+  vertical-align: -0.08em;
+  border-radius: 1px;
+  background: var(--purple);
+  animation: blink 1s steps(1) infinite;
+}
+
+.statementSub {
+  max-width: 46ch;
+  margin: clamp(14px, 1.5vw, 24px) auto 0;
+  font-size: clamp(13px, 1vw, 16.5px);
+  line-height: 1.5;
+  font-weight: 500;
+  color: #55555f;
+}
+
+/* ------------------------------- Responsive ------------------------------ */
+@media (max-width: 1099px) {
+  .frame {
+    max-width: 560px;
+  }
+
+  .stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chat {
+    min-height: clamp(380px, 76vw, 460px);
+  }
+
+  .side {
+    min-height: 0;
+  }
+
+  /* stacked, the cards sit square and rise instead of sliding in */
+  .reviewCard,
+  .reviewCard:nth-child(2) {
+    --tilt: 0deg;
+    --slide: 0, 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  /* too narrow to hold the closing line on one row */
+  .statementLine {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 520px) {
+  .ask {
+    max-width: 100%;
+  }
+}
+
+/* Reduced motion renders the finished state — nothing animates or replays. */
+@media (prefers-reduced-motion: reduce) {
+  .ask,
+  .mark,
+  .replyLead,
+  .result,
+  .reviewCard,
+  .replyBox,
+  .statement {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .reviewCard {
+    transform: rotate(var(--tilt));
+  }
+
+  /* the sweeps never run, so the keywords start lit */
+  .keyword {
+    animation: none;
+    background-size: 100% 100%;
+    color: #4416a6;
+  }
+
+  .good {
+    animation: none;
+    background-size: 100% 100%;
+    color: #0d7038;
+  }
+
+  .stage {
+    transition: none;
+  }
+
+  .caret,
+  .rotatorCaret,
+  .thinking i {
+    animation: none;
+  }
+}

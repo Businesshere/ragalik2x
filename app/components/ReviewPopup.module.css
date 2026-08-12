@@ -19,14 +19,21 @@
     0 2px 6px rgba(18, 20, 50, 0.06);
   opacity: 0;
   transform: translateY(14px) scale(0.98);
+  /* taken out of the tree once faded, not just made transparent */
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: opacity 0.32s ease,
+    transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 0.32s;
 }
 
 .visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+  visibility: visible;
   pointer-events: auto;
+  transition: opacity 0.32s ease,
+    transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0s;
 }
 
 .badge {
@@ -93,12 +100,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .popup {
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
     transform: none;
   }
 
   .visible {
     transform: none;
+    transition: opacity 0.2s ease, visibility 0s;
   }
 }
 

@@ -17,11 +17,34 @@ const notifications = [
 const SHOW_MS = 6000;
 const HIDE_MS = 2500;
 
+/** The AI section runs its own review cards — this one steps aside for it. */
+const QUIET_SECTION = "ai-search";
+
 export default function ReviewPopup() {
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [quiet, setQuiet] = useState(false);
 
   useEffect(() => {
+    const target = document.getElementById(QUIET_SECTION);
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setQuiet(entry.isIntersecting),
+      { threshold: 0 },
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    /* Paused rather than merely hidden, so it does not cycle out of sight. */
+    if (quiet) {
+      setVisible(false);
+      return;
+    }
+
     const timer = window.setTimeout(
       () => {
         if (visible) {
@@ -35,7 +58,7 @@ export default function ReviewPopup() {
     );
 
     return () => window.clearTimeout(timer);
-  }, [visible]);
+  }, [visible, quiet]);
 
   const review = notifications[index];
 
@@ -48,7 +71,7 @@ export default function ReviewPopup() {
 
       <div className={styles.body}>
         <p className={styles.headline}>
-          <span className={styles.name}>{review.name}</span> just left us a 5
+          <span className={styles.name}>{review.name}</span> just left you a 5
           star review
         </p>
 
@@ -73,7 +96,7 @@ export default function ReviewPopup() {
               d="m4 12.5 5.2 5.2L20 7"
             />
           </svg>
-          by BeFirst
+          by BeVisible
         </p>
       </div>
     </aside>

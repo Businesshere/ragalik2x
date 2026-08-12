@@ -5,7 +5,10 @@ import { useState } from "react";
 import { StarIcon } from "./icons";
 import styles from "./GrowFaster.module.css";
 
-/** The three benefit cards. Add `image: "/images/…"` to swap in a photo. */
+/**
+ * The three benefit cards. `image` points at a file in `public/images/grow`;
+ * a card without one falls back to its `from`/`to` gradient.
+ */
 const cards = [
   {
     id: "get-found",
@@ -14,7 +17,8 @@ const cards = [
     panel: "local" as const,
     from: "#6b5b4b",
     to: "#2a2320",
-    image: undefined as string | undefined,
+    image: "/images/grow/get-found.png" as string | undefined,
+    alt: "Two travellers on a street checking a restaurant's 5-star Google listing on a phone",
   },
   {
     id: "get-chosen",
@@ -23,7 +27,8 @@ const cards = [
     panel: "leads" as const,
     from: "#5c6b58",
     to: "#232a22",
-    image: undefined as string | undefined,
+    image: "/images/grow/get-chosen.png" as string | undefined,
+    alt: "A phone showing Google Maps with local business pins and a 5-star listing",
   },
   {
     id: "stop-guessing",
@@ -32,7 +37,8 @@ const cards = [
     panel: "ratings" as const,
     from: "#7c6a63",
     to: "#2b2422",
-    image: undefined as string | undefined,
+    image: "/images/grow/stop-guessing.png" as string | undefined,
+    alt: "A local-ranking dashboard showing map grid positions, tracked keywords and competitor ratings",
   },
 ];
 
@@ -184,7 +190,7 @@ export default function GrowFaster() {
                 <Image
                   className={styles.photo}
                   src={card.image}
-                  alt=""
+                  alt={card.alt}
                   width={1120}
                   height={810}
                 />
@@ -194,13 +200,18 @@ export default function GrowFaster() {
                 <Panel kind={card.panel} />
               </span>
 
+              {/* The wash spans the full card; only the text column narrows
+                  when the card opens, so it never runs under the panel. */}
               <span className={styles.caption}>
-                <span className={styles.cardTitle}>
-                  {card.title[0]}
-                  <br />
-                  {card.title[1]}
+                <span className={styles.captionInner}>
+                  {/* Stacks on the narrow closed card, one line once open. */}
+                  <span className={styles.cardTitle}>
+                    {card.title[0]}{" "}
+                    <br className={styles.titleBreak} />
+                    {card.title[1]}
+                  </span>
+                  <span className={styles.cardText}>{card.text}</span>
                 </span>
-                <span className={styles.cardText}>{card.text}</span>
               </span>
             </button>
           );

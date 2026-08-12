@@ -11,7 +11,7 @@ const urbanist = Urbanist({
 });
 
 export const metadata: Metadata = {
-  title: "BeFirst — Google Reviews for your business",
+  title: "BeVisible — Google Reviews for your business",
   description:
     "Get more 5-star reviews, build trust, and rank higher on Google with real customer feedback.",
 };

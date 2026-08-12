@@ -5,7 +5,7 @@ import Stage from "../components/Stage";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "Video Editing — BeFirst",
+  title: "Video Editing — BeVisible",
   description:
     "Simple video editing services for businesses: short-form edits, long-form cuts, captions and thumbnails.",
 };

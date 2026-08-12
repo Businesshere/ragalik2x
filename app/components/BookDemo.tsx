@@ -89,7 +89,7 @@ export default function BookDemo() {
       <div className={styles.inner}>
         <div className={styles.intro}>
           <h2 className={styles.title} id="book-title">
-            See BeFirst in action
+            See BeVisible in action
             <br />
             <span className={styles.accent}>in 15 minutes</span>
           </h2>
@@ -240,7 +240,7 @@ export default function BookDemo() {
 
               <p className={styles.doneTitle}>Booking confirmed</p>
               <p className={styles.doneText}>
-                You&apos;re booked with the BeFirst team.
+                You&apos;re booked with the BeVisible team.
                 <br />
                 An invitation has been emailed to you.
               </p>

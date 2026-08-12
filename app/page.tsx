@@ -1,3 +1,4 @@
+import AiSearch from "./components/AiSearch";
 import BookDemo from "./components/BookDemo";
 import Footer from "./components/Footer";
 import GrowFaster from "./components/GrowFaster";
@@ -16,6 +17,7 @@ export default function Home() {
         <Hero />
       </Stage>
 
+      <AiSearch />
       <GrowFaster />
       <BookDemo />
       <IndustryCarousel />

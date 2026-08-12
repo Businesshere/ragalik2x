@@ -1,4 +1,4 @@
-# BeFirst — website
+# BeVisible — website
 
 Next.js (App Router) recreation of the `First_Main/FirstPage.png` design, plus a
 minimal Video Editing page.
@@ -73,6 +73,11 @@ Styling is CSS Modules; the type family is Urbanist via `next/font/google`.
   runs end to end, but both are client-side only — wire the submit handlers in
   `TextUsWidget.tsx` and `BookDemo.tsx` to your backend, SMS provider and
   calendar.
+- Carousel photos live in `public/images/localbusinesess/`; wire one up by
+  adding `image` to its entry in `app/data/industries.ts`. Categories without a
+  photo keep their gradient tile.
+- Benefit-card photos live in `public/images/grow/` — see the README in that
+  folder for the expected filenames.
 - Placeholder content to replace before launch: the notification names in
   `ReviewPopup.tsx`, the award badges and rating figure in `Footer.tsx`, and the
-  gradient tiles standing in for photos in the carousel and benefit cards.
+  gradient tiles still standing in for photos in the carousel and benefit cards.

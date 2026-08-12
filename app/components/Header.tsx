@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <Link className={styles.logo} href="/">
-        BeFirst
+        BeVisible
       </Link>
 
       <nav className={styles.nav} aria-label="Main">
